@@ -232,6 +232,11 @@ private:
      */
     void set_flags_for(value a, char operation, value b);
     
+    /** @brief Prints a warning that a given opcode is not interpreted.
+     @param my_opcode opcode to warn about
+     */
+    void opcode_error(string my_opcode);
+    
 	// here come the instructions!!!!
 	// instructions handled
 	// push reg, ...

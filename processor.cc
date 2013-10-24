@@ -72,6 +72,10 @@ void Processor::set_stack_limit(address my_address) {
 	*(address*)&my_registers[sl] = my_address;
 }
 
+void Processor::opcode_error(string my_opcode) {
+    cerr << "No opcode handler found for (" << my_opcode << ")" << endl;
+}
+
 void Processor::dump() {
 
 	printf(" r0  - 0x%08x (%u)\n", *(unsigned int*)&my_registers[r0], *(unsigned int*)&my_registers[r0]);
@@ -190,7 +194,7 @@ int Processor::execute_one_step() {
 			}
 		}
 		else
-			cerr << "No opcode handler found for (" << my_command.at(0) << ")" << endl;
+			opcode_error(my_command.at(0));
 	}
 	else if(my_opcode.compare("asr") == 0) {
 		// asr (1) reg, (2) reg, (3) #
@@ -200,7 +204,7 @@ int Processor::execute_one_step() {
 				get_value   (my_command.at(3).c_str()));
 		}
 		else
-			cerr << "No opcode handler found for (" << my_command.at(0) << ")" << endl;
+			opcode_error(my_command.at(0));
 	}
 	else if(my_opcode.compare("asl") == 0) {
 		// asl (1) reg, (2) reg, (3) #
@@ -210,7 +214,7 @@ int Processor::execute_one_step() {
 				get_value   (my_command.at(3).c_str()));
 		}
 		else
-			cerr << "No opcode handler found for (" << my_command.at(0) << ")" << endl;
+			opcode_error(my_command.at(0));
 	}
 	else if(my_opcode.compare("lsr") == 0) {
 		// lsr (1) reg, (2) reg, (3) #
@@ -220,7 +224,7 @@ int Processor::execute_one_step() {
 				get_value   (my_command.at(3).c_str()));
 		}
 		else
-			cerr << "No opcode handler found for (" << my_command.at(0) << ")" << endl;
+			opcode_error(my_command.at(0));
 	}
 	else if(my_opcode.compare("lsl") == 0) {
 		// lsl (1) reg, (2) reg, (3) #
@@ -235,7 +239,7 @@ int Processor::execute_one_step() {
 					get_register(my_command.at(3).c_str()));
 		}
 		else
-			cerr << "No opcode handler found for (" << my_command.at(0) << ")" << endl;
+			opcode_error(my_command.at(0));
 	}
 	else if(my_opcode.compare("cmp") == 0) {
 		// cmp (1) reg, (2) #|reg
@@ -300,7 +304,7 @@ int Processor::execute_one_step() {
 			blx(get_value(my_command.at(1).c_str()));
 		}
 		else
-			cerr << "No opcode handler found for (" << my_command.at(0) << ")" << endl;
+			opcode_error(my_command.at(0));
 	}
 	else if(my_opcode.compare("and") == 0) {
 		// and (1) reg, (2) reg, (3) reg
@@ -315,7 +319,7 @@ int Processor::execute_one_step() {
 				 get_register(my_command.at(3).c_str()));
 		}
 		else
-			cerr << "No opcode handler found for (" << my_command.at(0) << ")" << endl;
+			opcode_error(my_command.at(0));
 	}
 	else if(my_opcode.compare("eor") == 0) {
 		if(my_command.size() == 3) {
@@ -328,7 +332,7 @@ int Processor::execute_one_step() {
 				get_register(my_command.at(3).c_str()));
 		}
 		else
-			cerr << "No opcode handler found for (" << my_command.at(0) << ")" << endl;
+			opcode_error(my_command.at(0));
 	}
 	else if(my_opcode.compare("orr") == 0) {
 		// or (1) reg, (2) reg, (3) reg
@@ -342,7 +346,7 @@ int Processor::execute_one_step() {
 				get_register(my_command.at(3).c_str()));
 		}
 		else
-			cerr << "No opcode handler found for (" << my_command.at(0) << ")" << endl;
+			opcode_error(my_command.at(0));
 	}
 	else if(my_opcode.compare("bic") == 0) {
 		bic(get_register(my_command.at(1).c_str()),
@@ -384,7 +388,7 @@ int Processor::execute_one_step() {
 				get_value   (my_command.at(3).c_str()));
 		}
 		else
-			cerr << "No opcode handler found for (" << my_command.at(0) << ")" << endl;
+			opcode_error(my_command.at(0));
 	}
 	else if(my_opcode.compare("ldr") == 0) {
 		if(my_command.size() == 3) {
