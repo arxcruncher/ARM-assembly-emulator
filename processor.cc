@@ -73,9 +73,7 @@ void Processor::set_stack_limit(address my_address) {
 }
 
 void Processor::dump() {
-	cout << "Processor state: " << endl;
-	
-	
+
 	printf(" r0  - 0x%08x (%u)\n", *(unsigned int*)&my_registers[r0], *(unsigned int*)&my_registers[r0]);
 	printf(" r1  - 0x%08x (%u)\n", *(unsigned int*)&my_registers[r1], *(unsigned int*)&my_registers[r1]);
 	printf(" r2  - 0x%08x (%u)\n", *(unsigned int*)&my_registers[r2], *(unsigned int*)&my_registers[r2]);
@@ -136,6 +134,13 @@ void Processor::dump() {
 
 void Processor::print_executed_instruction() {
 	assembly my_command = my_memory->get_program(previous_pc, 0);
+	
+	for(int i = 0; i < my_command.size(); i++)
+		cout << my_command.at(i) << " ";
+}
+
+void Processor::print_next_instruction() {
+	assembly my_command = my_memory->get_program(my_registers[pc], 0);
 	
 	for(int i = 0; i < my_command.size(); i++)
 		cout << my_command.at(i) << " ";

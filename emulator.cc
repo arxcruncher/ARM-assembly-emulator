@@ -47,11 +47,6 @@ void Emulator::dump_program() {
 	my_memory->dump_program();
 }
 
-void Emulator::dump_state() {
-	my_memory->dump(0, 1000);
-	my_processor->dump();
-}
-
 int Emulator::execute_one_step() {
 	int more_work_to_do = my_processor->execute_one_step();
 	return more_work_to_do;
@@ -66,6 +61,10 @@ void Emulator::print_executed_instruction() {
 	my_processor->print_executed_instruction();
 }
 
+void Emulator::print_next_instruction() {
+	my_processor->print_next_instruction();
+}
+
 int main(int argc, const char** argv) {
     
     const char *file_memory_map;
@@ -75,6 +74,7 @@ int main(int argc, const char** argv) {
     int print_cpu = 0;
     int print_links = 0;
     int print_program = 0;
+    int print_stat = 0;
     
     if(argc < 5) {
 		cout << "Argumenst: -m <memory-map>" << endl;
@@ -84,7 +84,7 @@ int main(int argc, const char** argv) {
 	}
     
     cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
-    cout << "~ Institute Mines-Telecom ARM-emulator 2012 ~" << endl;
+    cout << "~ Assembly ARM-emulator v7 THUMB       2013 ~" << endl;
     cout << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
     
     Emulator *my_emulator = new Emulator();
@@ -103,6 +103,7 @@ int main(int argc, const char** argv) {
 							case 'p' : print_cpu = 1; break;
 							case 'l' : print_links = 1; break;
 							case 'r' : print_program = 1; break;
+                            case 's' : print_stat = 1; break;
 						}
 						to_print++;
 					}
@@ -110,8 +111,6 @@ int main(int argc, const char** argv) {
 			}
 		}
 	}
-	
-	cout << "Printing links " << print_links << endl;
     
     File *my_file = new File(file_memory_map,
 							 file_program,
@@ -123,8 +122,6 @@ int main(int argc, const char** argv) {
 		cout << "PROGRAM:" << endl;
 		my_emulator->dump_program();
 	}
-    
-    //my_emulator->dump_state();
     
     if(print_memory) {
 		cout << "Initial MEMORY state:" << endl;
@@ -142,9 +139,20 @@ int main(int argc, const char** argv) {
     
     while(my_emulator->execute_one_step() && rounds < numeric_limits<int>::max()) {
 		//cout << rounds << ": ";
-		//my_emulator->print_executed_instruction(); cout << endl;
-		//my_emulator->dump_processor();
-		//my_emulator->dump_memory();
+		
+        if(print_cpu) {
+            cout << endl << "---------------------" << endl;
+            cout << "Cycle " << rounds << endl;
+            cout << "---------------------" << endl;
+            cout << "this: ";
+            my_emulator->print_executed_instruction();
+            cout << endl << "next: ";
+            my_emulator->print_next_instruction();
+            cout << endl << "---------------------" << endl;
+            my_emulator->dump_processor();
+        }
+		
+        //my_emulator->dump_memory();
         rounds++;
         //if(rounds > 193) cin.get();
     }
@@ -152,12 +160,23 @@ int main(int argc, const char** argv) {
     cout << "End of program ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << endl;
     cout << "Instructions executed: " << rounds << endl << endl;
     
-    //my_emulator->dump_state();
-    my_emulator->dump_processor();
     
-    my_emulator->dump_memory();
+    if(print_cpu) {
+        cout << "Final CPU state:" << endl;
+        my_emulator->dump_processor();
+    }
     
-    my_emulator->print_statistics();
+    if(print_memory) {
+		cout << "Final MEMORY state:" << endl;
+        my_emulator->dump_memory();
+    }
+    
+    if(print_stat) {
+        my_emulator->print_statistics();
+    }
     
     return 0;
 }
+
+
+

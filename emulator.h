@@ -72,14 +72,14 @@ public:
      */
     void dump_program();
     
-    /** @brief Prints the state of the processor and the memory to cout. */
-    void dump_state();
-    
     /** @brief Prints the memory access statistics to cout. */
     void print_statistics();
     
     /** @brief Prints the last executed instruction to cout. */
     void print_executed_instruction();
+    
+    /** @brief Prints the next instruction to be executed to cout. */
+    void print_next_instruction();
 };
 
 #endif

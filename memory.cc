@@ -95,13 +95,13 @@ void Memory::load(address my_address, value* my_value, int length) {
 }
 	
 void Memory::dump(address my_address, int length) {
-	cout << "Memory Map content:" << endl;
 	int round = 0;
 	//for(map<address,value>::iterator itr = my_memory_map.begin(); itr != my_memory_map.end() && round < length; ++itr, round++) {
 	for(map<address,value>::iterator itr = my_memory_map.begin(); itr != my_memory_map.end(); ++itr) {
 		// cout << " " << itr->first << ": " << itr->second << endl;
         printf("mm 0x%08x - 0x%08x (%u)\n", itr->first, itr->second, itr->second);
 	}
+    
     cout << endl;
 }
 

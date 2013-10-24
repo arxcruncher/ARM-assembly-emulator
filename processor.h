@@ -453,6 +453,9 @@ public:
     /** @brief Prints the last executed instruction to cout. */
     void print_executed_instruction();
     
+    /** @brief Prints the next instruction to be executed to cout. */
+    void print_next_instruction();  
+    
     /** @brief Prints the instruction access statistics to cout. */
     void print_statistics();
 
