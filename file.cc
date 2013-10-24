@@ -21,9 +21,10 @@
 #include "file.h"
 #include "utils.h"
 
-File::File(const char *file_memory, const char *file_program, Memory* my_memory, Processor* my_processor) {
+File::File(const char *file_memory, const char *file_program, Memory* my_memory, Processor* my_processor, int print_links) {
     read_memory_file(file_memory, my_memory, my_processor);
     read_program_file(file_program, my_memory);
+    debug = print_links;
 }
 
 address File::find_label_address(string label, vector<string>* code) {
@@ -38,7 +39,8 @@ address File::find_label_address(string label, vector<string>* code) {
 			my_address += 4;
 		else {
 			if(strcmp((*iter).c_str(), label.c_str()) == 0 || strcmp((*iter).c_str(), label_alt.c_str()) == 0) {
-				cout << "Label " << label << " on-line @ " << my_address << endl;
+				if (debug)
+					cout << "Label " << label << " on-line @ " << my_address << endl;
 				return my_address;
 			}
 			
@@ -102,7 +104,10 @@ int File::read_program_file(const char *file_program, Memory* my_memory) {
 							//cout << "Found ref " << *my_ref << " " << endl;
 							vector<string> my_split_word = split(*my_ref);
 							//cout << "Found ref " << my_split_word.at(1) << " " << endl;
-							cout << "Label " << my_split_command.at(k) << " replaced by #" << my_split_word.at(1) << endl;
+							
+							if (debug)
+								cout << "Label " << my_split_command.at(k) << " replaced by #" << my_split_word.at(1) << endl;
+								
 							my_split_command.at(k) = my_split_word.at(1).insert (0, 1, '#');
 							my_memory->set_program(my_address, my_split_command);
 							my_address += 4;
@@ -120,7 +125,10 @@ int File::read_program_file(const char *file_program, Memory* my_memory) {
 					my_ref++;
 					vector<string> my_split_word = split(*my_ref);
 					//cout << "Found ref " << my_split_word.at(1) << " " << endl;
-					cout << "Label " << my_split_command.at(2) << " replaced by #" << my_split_word.at(1) << endl;
+					
+					if (debug)
+						cout << "Label " << my_split_command.at(2) << " replaced by #" << my_split_word.at(1) << endl;
+						
 					my_split_command.at(2) = my_split_word.at(1).insert (0, 1, '#');
 					my_memory->set_program(my_address, my_split_command);
 					my_address += 4;

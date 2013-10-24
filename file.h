@@ -53,6 +53,8 @@ private:
      @return the address to where the label points
      */
 	address find_label_address (string label, vector<string>* code);
+	
+	int debug;
     
 public:
     
@@ -63,7 +65,7 @@ public:
      @param my_memory the memory map to store the data in
      @param my_processor the processor to initialize
      */
-    File(const char *file_memory, const char *file_program, Memory* my_memory, Processor* my_processor);
+    File(const char *file_memory, const char *file_program, Memory* my_memory, Processor* my_processor, int print_links);
     
     /** @brief Reads a memory map and loads this into the emulator.
      

@@ -71,8 +71,15 @@ int main(int argc, const char** argv) {
     const char *file_memory_map;
     const char *file_program;
     
-    if(argc < 3) {
-		cout << "Argumenst: <memory-map> <assembly-code>" << endl;
+    int print_memory = 0;
+    int print_cpu = 0;
+    int print_links = 0;
+    int print_program = 0;
+    
+    if(argc < 5) {
+		cout << "Argumenst: -m <memory-map>" << endl;
+		cout << "           -p <assembly-code>" << endl;
+		cout << "           -d {m|p|l|r}" << endl;
 		return -1;
 	}
     
@@ -82,17 +89,52 @@ int main(int argc, const char** argv) {
     
     Emulator *my_emulator = new Emulator();
     
-    file_memory_map = argv[1];
-    file_program    = argv[2];
     
-    File *my_file = new File(file_memory_map, file_program, my_emulator->get_memory(), my_emulator->get_processor());
+    for(int i = 0; i < argc; i++) {
+		if(argv[i][0] == '-') {
+			switch (argv[i][1]) {
+				case 'm' : file_memory_map = argv[++i]; break;
+				case 'p' : file_program    = argv[++i]; break;
+				case 'd' : {
+					char *to_print = (char*)argv[++i];
+					for(int k = 0; k < strlen(argv[i]); k++) {
+						switch (*to_print) {
+							case 'm' : print_memory = 1; break;
+							case 'p' : print_cpu = 1; break;
+							case 'l' : print_links = 1; break;
+							case 'r' : print_program = 1; break;
+						}
+						to_print++;
+					}
+				}
+			}
+		}
+	}
+	
+	cout << "Printing links " << print_links << endl;
     
-    my_emulator->dump_program();
+    File *my_file = new File(file_memory_map,
+							 file_program,
+							 my_emulator->get_memory(),
+							 my_emulator->get_processor(),
+							 print_links);
+    
+    if(print_program) {
+		cout << "PROGRAM:" << endl;
+		my_emulator->dump_program();
+	}
     
     //my_emulator->dump_state();
-    //cout << "Initial SYSTEM state:" << endl;
-    //my_emulator->dump_memory();
-    my_emulator->dump_processor();
+    
+    if(print_memory) {
+		cout << "Initial MEMORY state:" << endl;
+		my_emulator->dump_memory();
+	}
+    
+    if(print_cpu) {
+		cout << "Initial CPU state:" << endl;
+		my_emulator->dump_processor();
+	}
     
     int rounds = 0;
     
